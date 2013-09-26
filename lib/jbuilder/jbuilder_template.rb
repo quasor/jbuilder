@@ -49,9 +49,9 @@ class JbuilderTemplate < Jbuilder
   def cache!(key=nil, options={}, &block)
     if @context.controller.perform_caching
       value = ::Rails.cache.fetch(_cache_key(key), options) do
-        _scope { yield self }
+        ::MultiJson.dump _scope { yield self }
       end
-
+      value = ::MultiJson.load value
       _merge(value)
     else
       yield
